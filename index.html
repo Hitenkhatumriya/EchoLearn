@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f7f6">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <title>EchoLearn — Image Guidance Demo</title>
+  <link rel="stylesheet" href="echolearn.css">
+  <script src="echolearn.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="./echo-image-helper.html" aria-label="EchoLearn home">
+        <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11a4.7 4.7 0 0 1 8.8-2.1 4.7 4.7 0 0 1 8.8 2.1Z"/><path d="M5.7 12h3l1.6-3.1 2.3 6.2 1.7-3.1h4"/></svg></span>
+        <span>EchoLearn</span>
+      </a>
+      <span class="demo-pill">For demo purposes only</span>
+    </header>
+
+    <section class="intro">
+      <div class="kicker">Echocardiography · guided learning</div>
+      <h1>Practice reading the image and adjusting the view.</h1>
+      <p>Follow four simple steps. Upload a still image, hear a brightness suggestion, adjust the practice controls, and compare the simulated preview.</p>
+    </section>
+
+    <div class="workspace">
+      <nav class="stepper card" aria-label="Four learning steps">
+        <h2>Your session</h2>
+        <ol>
+          <li class="step active" id="step1"><span class="step-num">1</span><span><strong>Enhance image</strong><small>Adjust contrast automatically</small></span></li>
+          <li class="step" id="step2"><span class="step-num">2</span><span><strong>Analyze structure</strong><small>Check for possible dark spaces</small></span></li>
+          <li class="step" id="step3"><span class="step-num">3</span><span><strong>Hear findings</strong><small>Listen to the image summary</small></span></li>
+          <li class="step" id="step4"><span class="step-num">4</span><span><strong>Try an adjustment</strong><small>See a simulated control change</small></span></li>
+        </ol>
+        <p class="stepper-note">This prototype checks brightness and possible dark spaces within the scan sector. It does not identify named structures or diagnose images.</p>
+      </nav>
+
+      <main class="main-column">
+        <section class="card upload-card" aria-labelledby="upload-title">
+          <div class="card-head"><div><span class="section-label">STEP 1 · AUTOMATIC ENHANCEMENT</span><h2 id="upload-title">Choose a heart ultrasound still</h2></div><span class="subtle">PNG, JPG, WebP · max 12 MB</span></div>
+          <div class="upload-area">
+            <label class="drop" id="drop" for="imageFile">
+              <span><strong>Drop an image here</strong><small>Images are processed in this browser and are not uploaded.</small></span>
+              <span class="pick">Choose image</span>
+            </label>
+            <input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp">
+            <p id="uploadStatus" class="status" role="status" aria-live="polite">No image selected.</p>
+          </div>
+          <div class="image-grid">
+            <article class="image-box"><h3>Original image <span>Uploaded</span></h3><div class="canvas-wrap"><div class="placeholder" id="originalPlaceholder"><b>Your image will appear here</b>Select a still image to begin</div><canvas id="original" class="hidden" aria-label="Original uploaded ultrasound image"></canvas></div></article>
+            <article class="image-box"><h3>Enhanced image <span id="previewTag">Waiting for image</span></h3><div class="canvas-wrap"><div class="placeholder" id="previewPlaceholder"><b>Enhanced view will appear here</b>Upload a still to begin</div><canvas id="preview" class="hidden" aria-label="Automatically enhanced ultrasound image with analysis highlights"></canvas><canvas id="analysisOverlay" class="hidden overlay-canvas" aria-hidden="true"></canvas></div></article>
+          </div>
+          <p class="image-caption">Automatic contrast enhancement runs first, with a brightness lift if the result remains dark. Structure cues are then checked on the enhanced image; highlights are not confirmed anatomy.</p>
+        </section>
+
+        <section class="card coach-card" aria-labelledby="coach-title">
+          <div class="section-label">STEP 2 · STRUCTURE CHECK / STEP 3 · SPOKEN FINDINGS</div>
+          <h2 id="coach-title">Image findings will appear here</h2>
+          <p id="suggestion">After enhancement, the demo checks for possible dark spaces within the scan sector and summarizes its brightness. The spoken summary uses your browser’s voice.</p>
+          <div class="coach-actions"><button class="button primary" id="speakButton" type="button" disabled>▶ Hear findings</button><span class="subtle" id="speechStatus" aria-live="polite">Audio plays on this device.</span></div>
+        </section>
+
+        <section class="card controls-card" aria-labelledby="controls-title">
+          <div class="card-head"><div><span class="section-label">STEP 4 · SIMULATED ADJUSTMENT</span><h2 id="controls-title">Try a practice control</h2></div><button class="button quiet" id="resetButton" type="button">Reset</button></div>
+          <p class="instructions">Adjust one or more settings, then select <strong>Show my adjustment</strong>. These example values do not connect to an ultrasound machine.</p>
+          <div class="control-grid">
+            <div class="control"><label for="gain">Brightness / Gain <output id="gainValue">50%</output></label><small>Changes the lightness of the whole picture</small><input id="gain" type="range" min="0" max="100" value="50"></div>
+            <div class="control"><label for="depth">Depth <output id="depthValue">16 cm</output></label><small>How far into the body the view reaches</small><input id="depth" type="range" min="6" max="24" value="16"></div>
+            <div class="control"><label for="tgc">TGC <output id="tgcValue">0</output></label><small>Time Gain Compensation: changes brightness with depth</small><input id="tgc" type="range" min="-10" max="10" value="0"></div>
+            <div class="control"><label for="frequency">Frequency <output id="frequencyValue">3 MHz</output></label><small>Higher can show detail; lower reaches deeper</small><input id="frequency" type="range" min="1" max="5" value="3"></div>
+            <div class="control"><label for="focus">Focus <output id="focusValue">8 cm</output></label><small>Depth where the image is sharpest</small><input id="focus" type="range" min="2" max="20" value="8"></div>
+          </div>
+          <div class="apply-row"><button class="button primary" id="applyButton" type="button" disabled>Show my adjustment</button><p id="applyStatus" class="status" role="status" aria-live="polite">Choose an image to enable the preview.</p></div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
